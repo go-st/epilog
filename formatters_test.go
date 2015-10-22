@@ -21,6 +21,6 @@ func (s *FormatterTestSuite) TestFormat(c *C) {
 	entry.Fields["foo"] = "bar"
 	result := formatter.Format(entry)
 
-	c.Assert(string(result), Equals, "[2015-09-17 16:00:00.000000] (bar) hello const\n")
+	c.Assert(string(result), Equals, "[2015-09-17T16:00:00.000000+00:00] (bar) hello const\n")
 
 }

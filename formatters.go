@@ -34,7 +34,7 @@ func (f *TextFormatter) Format(entry *Entry) []byte {
 	replaces = append(
 		replaces,
 		":level:", entry.Level.String(),
-		":time:", entry.Time.UTC().Format("2006-01-02 15:04:05.000000-07:00"),
+		":time:", entry.Time.UTC().Format("2006-01-02T15:04:05.000000-07:00"),
 		":message:", entry.Message,
 		":additional:", additionalBuf.String(),
 	)
