@@ -3,6 +3,7 @@ package loggo
 import (
 	"testing"
 
+	"bitbucket.org/lazadaweb/go-logger"
 	. "gopkg.in/check.v1"
 )
 
@@ -17,7 +18,7 @@ func (p *testProcessor) Process(entry *Entry) {
 }
 
 type testHandler struct {
-	Level   Level
+	Level   logger.Level
 	entries []*Entry
 }
 
@@ -29,8 +30,8 @@ func (h *testHandler) Copy() IHandler {
 	return h
 }
 
-func (h *testHandler) IsEnabledFor(level Level) bool {
-	return level >= h.Level
+func (h *testHandler) IsEnabledFor(level logger.Level) bool {
+	return level <= h.Level
 }
 
 type handlerForCopy struct {
@@ -44,6 +45,6 @@ func (h *handlerForCopy) Copy() IHandler {
 	return &handlerForCopy{original: h}
 }
 
-func (h *handlerForCopy) IsEnabledFor(level Level) bool {
+func (h *handlerForCopy) IsEnabledFor(level logger.Level) bool {
 	return h.original.IsEnabledFor(level)
 }

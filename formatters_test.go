@@ -3,6 +3,7 @@ package loggo
 import (
 	"time"
 
+	"bitbucket.org/lazadaweb/go-logger"
 	. "gopkg.in/check.v1"
 )
 
@@ -15,9 +16,9 @@ var (
 func (s *FormatterTestSuite) TestFormat(c *C) {
 	formatter := NewTextFormatter("[:time:] (:foo:) :message: const")
 
-	time, _ := time.Parse("2006-01-02T15:04:05", "2015-09-17T16:00:00")
+	entryTime, _ := time.Parse("2006-01-02T15:04:05", "2015-09-17T16:00:00")
 
-	entry := NewEntry(LevelDebug, time, "hello")
+	entry := NewEntry(logger.LevelDebug, entryTime, "hello")
 	entry.Fields["foo"] = "bar"
 	result := formatter.Format(entry)
 

@@ -4,23 +4,27 @@ import (
 	"io"
 	"os"
 	"sync"
+
+	"bitbucket.org/lazadaweb/go-logger"
 )
 
 // IHandler interface
 type IHandler interface {
 	Handle(entry *Entry)
 	Copy() IHandler
-	IsEnabledFor(level Level) bool
+	IsEnabledFor(level logger.Level) bool
 }
 
+// BufferHandler is a handler collecting entries in buffer
 type BufferHandler struct {
 	handler    IHandler
-	flushLevel Level
+	flushLevel logger.Level
 	buffer     []*Entry
 	lock       sync.Mutex
 }
 
-func NewBufferHandler(handler IHandler, flushLevel Level) *BufferHandler {
+// NewBufferHandler creates new BufferHandler
+func NewBufferHandler(handler IHandler, flushLevel logger.Level) *BufferHandler {
 	return &BufferHandler{
 		handler:    handler,
 		flushLevel: flushLevel,
@@ -28,12 +32,13 @@ func NewBufferHandler(handler IHandler, flushLevel Level) *BufferHandler {
 	}
 }
 
+// Handle processes Entry
 func (h *BufferHandler) Handle(entry *Entry) {
 	h.lock.Lock()
 	defer h.lock.Unlock()
 
 	h.buffer = append(h.buffer, entry)
-	if entry.Level >= h.flushLevel {
+	if entry.Level <= h.flushLevel {
 		for _, e := range h.buffer {
 			h.handler.Handle(e)
 		}
@@ -42,30 +47,36 @@ func (h *BufferHandler) Handle(entry *Entry) {
 	}
 }
 
+// Copy creates copy of current logger
 func (h *BufferHandler) Copy() IHandler {
 	return NewBufferHandler(h.handler.Copy(), h.flushLevel)
 }
 
-func (h *BufferHandler) IsEnabledFor(level Level) bool {
+// IsEnabledFor checks whether level is enabled or not
+func (h *BufferHandler) IsEnabledFor(level logger.Level) bool {
 	return h.handler.IsEnabledFor(level)
 }
 
+// MultiHandler is a handler consisting of another handlers
 type MultiHandler struct {
 	handlers []IHandler
 }
 
+// NewMultiHandler creates new MultiHandler
 func NewMultiHandler(handlers ...IHandler) *MultiHandler {
 	return &MultiHandler{
 		handlers: handlers,
 	}
 }
 
+// Handle processes Entry
 func (h *MultiHandler) Handle(entry *Entry) {
 	for _, handler := range h.handlers {
 		handler.Handle(entry)
 	}
 }
 
+// Copy creates copy of current logger
 func (h *MultiHandler) Copy() IHandler {
 	handlers := make([]IHandler, len(h.handlers))
 	for i, handler := range h.handlers {
@@ -75,7 +86,8 @@ func (h *MultiHandler) Copy() IHandler {
 	return NewMultiHandler(handlers...)
 }
 
-func (h *MultiHandler) IsEnabledFor(level Level) bool {
+// IsEnabledFor checks whether level is enabled or not
+func (h *MultiHandler) IsEnabledFor(level logger.Level) bool {
 	for _, handler := range h.handlers {
 		if handler.IsEnabledFor(level) {
 			return true
@@ -85,15 +97,16 @@ func (h *MultiHandler) IsEnabledFor(level Level) bool {
 	return false
 }
 
+// StreamHandler is a handler using io.Writer as output source
 type StreamHandler struct {
-	level        Level
+	level        logger.Level
 	outputWriter io.Writer
 	formatter    IFormatter
 }
 
 // NewStreamHandler returns new StreamHandler.
 // If out is not passed - stdout will be used
-func NewStreamHandler(level Level, formatter IFormatter, outputWriter ...io.Writer) *StreamHandler {
+func NewStreamHandler(level logger.Level, formatter IFormatter, outputWriter ...io.Writer) *StreamHandler {
 	var outputW io.Writer
 
 	if len(outputWriter) > 1 {
@@ -113,18 +126,19 @@ func NewStreamHandler(level Level, formatter IFormatter, outputWriter ...io.Writ
 	}
 }
 
+// Handle processes Entry
 func (h *StreamHandler) Handle(entry *Entry) {
-	if entry.Level < h.level {
-		return
+	if h.IsEnabledFor(entry.Level) {
+		h.outputWriter.Write(h.formatter.Format(entry))
 	}
-
-	h.outputWriter.Write(h.formatter.Format(entry))
 }
 
+// Copy creates copy of current logger
 func (h *StreamHandler) Copy() IHandler {
 	return h
 }
 
-func (h *StreamHandler) IsEnabledFor(level Level) bool {
-	return level >= h.level
+// IsEnabledFor checks whether level is enabled or not
+func (h *StreamHandler) IsEnabledFor(level logger.Level) bool {
+	return level <= h.level
 }

@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// IProcessor is an interface for processor
 type IProcessor interface {
 	Process(entry *Entry)
 }
@@ -62,16 +63,19 @@ func formatFuncName(f string) string {
 	return f[:i+j+1]
 }
 
+// FieldsProcessor is a processor of fields list
 type FieldsProcessor struct {
 	fields map[string]interface{}
 }
 
+// NewFieldsProcessor creates new FieldsProcessor
 func NewFieldsProcessor(fields map[string]interface{}) *FieldsProcessor {
 	return &FieldsProcessor{
 		fields: fields,
 	}
 }
 
+// Process processes Entry
 func (p *FieldsProcessor) Process(entry *Entry) {
 	for key, value := range p.fields {
 		entry.Fields[key] = value

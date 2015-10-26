@@ -17,10 +17,12 @@ type TextFormatter struct {
 	format string
 }
 
+// NewTextFormatter creates new TextFormatter
 func NewTextFormatter(format string) *TextFormatter {
 	return &TextFormatter{format: format}
 }
 
+// Format formats Entry
 func (f *TextFormatter) Format(entry *Entry) []byte {
 	result := f.format
 

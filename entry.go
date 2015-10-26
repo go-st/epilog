@@ -1,17 +1,21 @@
 package loggo
 
-import "time"
+import (
+	"time"
+
+	"bitbucket.org/lazadaweb/go-logger"
+)
 
 // Entry is a struct for logging unit
 type Entry struct {
 	Fields  map[string]interface{}
-	Level   Level
+	Level   logger.Level
 	Message string
 	Time    time.Time
 }
 
 // NewEntry constructor for entry
-func NewEntry(level Level, time time.Time, message string) *Entry {
+func NewEntry(level logger.Level, time time.Time, message string) *Entry {
 	return &Entry{
 		Level:   level,
 		Time:    time,

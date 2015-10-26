@@ -1,7 +1,9 @@
 package loggo
 
+import "bitbucket.org/lazadaweb/go-logger"
+
 func ExampleSimpleUsage() {
-	logger := New("MyLogger", NewStreamHandler(LevelDebug, NewTextFormatter("(:level:) :message:")))
+	logger := New("MyLogger", NewStreamHandler(logger.LevelDebug, NewTextFormatter("(:level:) :message:")))
 	logger.Debug("hello debug")
 	logger.Info("hello info")
 
@@ -11,8 +13,8 @@ func ExampleSimpleUsage() {
 }
 
 func ExampleBufferEmpty() {
-	handler := NewStreamHandler(LevelDebug, NewTextFormatter("(:level:) :message:"))
-	logger := New("MyLogger", NewBufferHandler(handler, LevelWarning))
+	handler := NewStreamHandler(logger.LevelDebug, NewTextFormatter("(:level:) :message:"))
+	logger := New("MyLogger", NewBufferHandler(handler, logger.LevelWarning))
 	logger.Debug("hello debug")
 	logger.Info("hello info")
 
@@ -20,8 +22,8 @@ func ExampleBufferEmpty() {
 }
 
 func ExampleBuffer() {
-	handler := NewStreamHandler(LevelInfo, NewTextFormatter("(:level:) :message:"))
-	logger := New("MyLogger", NewBufferHandler(handler, LevelWarning))
+	handler := NewStreamHandler(logger.LevelInfo, NewTextFormatter("(:level:) :message:"))
+	logger := New("MyLogger", NewBufferHandler(handler, logger.LevelWarning))
 	logger.Debug("hello debug")
 	logger.Info("hello info")
 	logger.Warning("hello warning")
