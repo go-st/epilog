@@ -1,0 +1,6 @@
+package: bitbucket.org/lazadaweb/loggo
+import:
+  - package: bitbucket.org/lazadaweb/go-logger
+    vcs: git
+    version: ~1.x
+    repo: git@bitbucket.org:lazadaweb/go-logger.git
