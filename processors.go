@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+const callDepth = 4
+
 // IProcessor is an interface for processor
 type IProcessor interface {
 	Process(entry *Entry)
@@ -32,7 +34,7 @@ func (p *CalleeProcessor) Process(entry *Entry) {
 
 func getPackageName(shift int) string {
 	v := "???"
-	if pc, _, _, ok := runtime.Caller(shift + 5); ok {
+	if pc, _, _, ok := runtime.Caller(shift + callDepth); ok {
 		if f := runtime.FuncForPC(pc); f != nil {
 			v = formatFuncName(f.Name())
 		}
@@ -42,7 +44,7 @@ func getPackageName(shift int) string {
 }
 
 func getFileName(shift int) string {
-	_, file, line, ok := runtime.Caller(shift + 5)
+	_, file, line, ok := runtime.Caller(shift + callDepth)
 	if !ok {
 		file = "???"
 		line = 0
