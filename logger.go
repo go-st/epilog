@@ -42,101 +42,92 @@ func (l *Logger) AddProcessor(processors ...IProcessor) {
 
 // Log logs new entry with specified level
 func (l *Logger) Log(level logger.Level, args ...interface{}) {
-	if !l.handler.IsEnabledFor(level) {
-		return
-	}
-
-	entry := NewEntry(level, time.Now(), fmt.Sprint(args...))
-	for _, processor := range l.processors {
-		processor.Process(entry)
-	}
-	entry.Fields["_module"] = l.name
-	l.handler.Handle(entry)
+	l.log(level, args...)
 }
 
 // Logf logs new entry with specified level
 func (l *Logger) Logf(level logger.Level, format string, args ...interface{}) {
-	l.Log(level, fmt.Sprintf(format, args...))
+	l.log(level, fmt.Sprintf(format, args...))
 }
 
 // Debug alias for log with debug level
 func (l *Logger) Debug(args ...interface{}) {
-	l.Log(logger.LevelDebug, args...)
+	l.log(logger.LevelDebug, args...)
 }
 
 // Info alias for log with Info level
 func (l *Logger) Info(args ...interface{}) {
-	l.Log(logger.LevelInfo, args...)
+	l.log(logger.LevelInfo, args...)
 }
 
 // Notice alias for log with notice level
 func (l *Logger) Notice(args ...interface{}) {
-	l.Log(logger.LevelNotice, args...)
+	l.log(logger.LevelNotice, args...)
 }
 
 // Warning alias for log with warning level
 func (l *Logger) Warning(args ...interface{}) {
-	l.Log(logger.LevelWarning, args...)
+	l.log(logger.LevelWarning, args...)
 }
 
 // Error alias for log with error level
 func (l *Logger) Error(args ...interface{}) {
-	l.Log(logger.LevelError, args...)
+	l.log(logger.LevelError, args...)
 }
 
 // Critical alias for log with critical level
 func (l *Logger) Critical(args ...interface{}) {
-	l.Log(logger.LevelCritical, args...)
+	l.log(logger.LevelCritical, args...)
 }
 
 // Alert alias for log with alert level
 func (l *Logger) Alert(args ...interface{}) {
-	l.Log(logger.LevelAlert, args...)
+	l.log(logger.LevelAlert, args...)
 }
 
 // Emergency alias for log with emergency level
 func (l *Logger) Emergency(args ...interface{}) {
-	l.Log(logger.LevelEmergency, args...)
+	l.log(logger.LevelEmergency, args...)
 }
 
 // Debugf alias for log with debug level
 func (l *Logger) Debugf(format string, args ...interface{}) {
-	l.Logf(logger.LevelDebug, format, args...)
+	l.log(logger.LevelDebug, fmt.Sprintf(format, args...))
 }
 
 // Infof alias for log with info level
 func (l *Logger) Infof(format string, args ...interface{}) {
-	l.Logf(logger.LevelInfo, format, args...)
+	l.log(logger.LevelInfo, fmt.Sprintf(format, args...))
 }
 
 // Noticef alias for log with notice level
 func (l *Logger) Noticef(format string, args ...interface{}) {
-	l.Logf(logger.LevelNotice, format, args...)
+	l.log(logger.LevelNotice, fmt.Sprintf(format, args...))
 }
 
 // Warningf alias for log with warning level
 func (l *Logger) Warningf(format string, args ...interface{}) {
-	l.Logf(logger.LevelWarning, format, args...)
+	l.log(logger.LevelWarning, fmt.Sprintf(format, args...))
 }
 
 // Errorf alias for log with error level
 func (l *Logger) Errorf(format string, args ...interface{}) {
-	l.Logf(logger.LevelError, format, args...)
+	l.log(logger.LevelError, fmt.Sprintf(format, args...))
 }
 
 // Criticalf alias for log with critical level
 func (l *Logger) Criticalf(format string, args ...interface{}) {
-	l.Logf(logger.LevelCritical, format, args...)
+	l.log(logger.LevelCritical, fmt.Sprintf(format, args...))
 }
 
 // Alertf alias for log with alert level
 func (l *Logger) Alertf(format string, args ...interface{}) {
-	l.Logf(logger.LevelAlert, format, args...)
+	l.log(logger.LevelAlert, fmt.Sprintf(format, args...))
 }
 
 // Emergencyf alias for log with emergency level
 func (l *Logger) Emergencyf(format string, args ...interface{}) {
-	l.Logf(logger.LevelEmergency, format, args...)
+	l.log(logger.LevelEmergency, fmt.Sprintf(format, args...))
 }
 
 // IsDebugEnabled returns true if logger is enabled for logger.LevelDebug and false otherwise
@@ -177,4 +168,17 @@ func (l *Logger) IsCriticalEnabled() bool {
 // IsEmergencyEnabled returns true if logger is enabled for logger.LevelEmergency and false otherwise
 func (l *Logger) IsEmergencyEnabled() bool {
 	return l.handler.IsEnabledFor(logger.LevelEmergency)
+}
+
+func (l *Logger) log(level logger.Level, args ...interface{}) {
+	if !l.handler.IsEnabledFor(level) {
+		return
+	}
+
+	entry := NewEntry(level, time.Now(), fmt.Sprint(args...))
+	for _, processor := range l.processors {
+		processor.Process(entry)
+	}
+	entry.Fields["_module"] = l.name
+	l.handler.Handle(entry)
 }
