@@ -1,6 +1,6 @@
-package loggo
+package epilog
 
-import "bitbucket.org/lazadaweb/go-logger"
+import "github.com/go-st/logger"
 
 func ExampleSimpleUsage() {
 	logger := New("MyLogger", NewStreamHandler(logger.LevelDebug, NewTextFormatter("(:level:) :message:")))

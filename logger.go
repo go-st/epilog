@@ -1,10 +1,10 @@
-package loggo
+package epilog
 
 import (
 	"fmt"
 	"time"
 
-	"bitbucket.org/lazadaweb/go-logger"
+	"github.com/go-st/logger"
 )
 
 // DefaultHandler is a default StreamHandler with popular message formatter

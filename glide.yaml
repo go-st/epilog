@@ -1,6 +1,6 @@
-package: bitbucket.org/lazadaweb/loggo
+package: github.com/go-st/epilog
 import:
-  - package: bitbucket.org/lazadaweb/go-logger
+  - package: github.com/go-st/logger
     vcs: git
     version: ~1.x
-    repo: git@bitbucket.org:lazadaweb/go-logger.git
+    repo: https://github.com/go-st/logger.git

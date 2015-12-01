@@ -1,7 +1,7 @@
-package loggo
+package epilog
 
 import (
-	"bitbucket.org/lazadaweb/go-logger"
+	"github.com/go-st/logger"
 	. "gopkg.in/check.v1"
 )
 

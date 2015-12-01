@@ -1,11 +1,11 @@
-package loggo
+package epilog
 
 import (
 	"io"
 	"os"
 	"sync"
 
-	"bitbucket.org/lazadaweb/go-logger"
+	"github.com/go-st/logger"
 )
 
 // IHandler interface

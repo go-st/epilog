@@ -1,9 +1,9 @@
-package loggo
+package epilog
 
 import (
 	"time"
 
-	"bitbucket.org/lazadaweb/go-logger"
+	"github.com/go-st/logger"
 )
 
 // Entry is a struct for logging unit

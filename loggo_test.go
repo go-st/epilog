@@ -1,9 +1,9 @@
-package loggo
+package epilog
 
 import (
 	"testing"
 
-	"bitbucket.org/lazadaweb/go-logger"
+	"github.com/go-st/logger"
 	. "gopkg.in/check.v1"
 )
 
