@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-const callDepth = 4
+const callDepth = 5
 
 // IProcessor is an interface for processor
 type IProcessor interface {
