@@ -7,6 +7,9 @@ import (
 	"strings"
 )
 
+// timeLayout is a layout for time formatting being used by default
+const defaultTimeLayout = "2006-01-02T15:04:05.000000-07:00"
+
 // IFormatter formatters convert entries to []byte and used by handlers
 type IFormatter interface {
 	Format(entry *Entry) []byte
@@ -14,12 +17,18 @@ type IFormatter interface {
 
 // TextFormatter simple formatter
 type TextFormatter struct {
-	format string
+	format     string
+	timeLayout string
 }
 
 // NewTextFormatter creates new TextFormatter
 func NewTextFormatter(format string) *TextFormatter {
-	return &TextFormatter{format: format}
+	return &TextFormatter{format: format, timeLayout: defaultTimeLayout}
+}
+
+// NewTextFormatterWithTimeLayout creates new TextFormatter with custom time layout
+func NewTextFormatterWithTimeLayout(format string, timeLayout string) *TextFormatter {
+	return &TextFormatter{format: format, timeLayout: timeLayout}
 }
 
 // Format formats Entry
@@ -36,7 +45,7 @@ func (f *TextFormatter) Format(entry *Entry) []byte {
 	replaces = append(
 		replaces,
 		":level:", entry.Level.String(),
-		":time:", entry.Time.UTC().Format("2006-01-02T15:04:05.000000-07:00"),
+		":time:", entry.Time.UTC().Format(f.timeLayout),
 		":message:", entry.Message,
 		":additional:", additionalBuf.String(),
 	)
